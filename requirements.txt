@@ -1,0 +1,81 @@
+# =============================================================================
+# DEPENDÊNCIAS PRINCIPAIS - CREWAI
+# =============================================================================
+
+# Framework principal
+crewai[tools]==0.80.0
+
+# Modelos de linguagem e integrações
+openai>=1.0.0
+litellm>=1.0.0
+
+# Validação e estruturação de dados
+pydantic>=2.0.0
+
+# Gerenciamento de configuração
+python-dotenv>=1.0.0
+
+# =============================================================================
+# OBSERVABILIDADE E MONITORAMENTO
+# =============================================================================
+
+# Tracing e observabilidade
+langtrace-python-sdk>=2.0.0
+openlit>=1.0.0
+opentelemetry-api>=1.20.0
+opentelemetry-sdk>=1.20.0
+
+# =============================================================================
+# PROCESSAMENTO DE DOCUMENTOS E CONHECIMENTO
+# =============================================================================
+
+# Processamento de documentos
+docling>=1.0.0
+pypdf>=3.0.0
+python-docx>=0.8.11
+
+# Embeddings e busca semântica
+sentence-transformers>=2.2.0
+faiss-cpu>=1.7.0
+
+# =============================================================================
+# FERRAMENTAS E INTEGRAÇÕES
+# =============================================================================
+
+# Requisições HTTP
+requests>=2.31.0
+httpx>=0.24.0
+
+# Processamento de dados
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Serialização
+pyyaml>=6.0.0
+toml>=0.10.0
+
+# =============================================================================
+# DESENVOLVIMENTO E TESTES
+# =============================================================================
+
+# Formatação e linting
+black>=23.0.0
+ruff>=0.1.0
+
+# Testes
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+
+# Tipo checking
+mypy>=1.5.0
+
+# =============================================================================
+# OPCIONAL - INTERFACES E CHAT
+# =============================================================================
+
+# Interface web (opcional)
+streamlit>=1.28.0
+gradio>=4.0.0
+
+# Cliente Chatwoot (opcional)
+# chatwoot-client>=1.0.0

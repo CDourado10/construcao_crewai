@@ -1,0 +1,2 @@
+# Este arquivo mantém o diretório resultados/ no controle de versão
+# Os arquivos de resultado são ignorados pelo .gitignore mas a estrutura é preservada

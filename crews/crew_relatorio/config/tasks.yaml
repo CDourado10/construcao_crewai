@@ -1,0 +1,44 @@
+gerar_relatorio:
+  description: >
+    Analise os dados de entrada fornecidos e gere um relatório final estruturado e acionável.
+    
+    ## Dados de Entrada para Análise:
+    {dados_entrada}
+    
+    ## Tópico Principal:
+    {topico}
+    
+    ## Instruções Detalhadas:
+    
+    1. **Análise dos Dados**: Examine cuidadosamente todos os dados fornecidos, identificando:
+       - Informações-chave e padrões relevantes
+       - Pontos de destaque e descobertas importantes
+       - Conexões e relações entre diferentes elementos
+    
+    2. **Estruturação do Relatório**: Organize suas descobertas seguindo esta estrutura:
+       - **Resumo Executivo**: Visão geral concisa (2-3 parágrafos)
+       - **Análise Detalhada**: Exame aprofundado dos dados e descobertas
+       - **Insights Principais**: Lista dos 3-5 insights mais relevantes
+       - **Recomendações**: Ações práticas e acionáveis baseadas na análise
+       - **Conclusão**: Síntese final dos pontos-chave
+    
+    3. **Critérios de Qualidade**:
+       - Use linguagem clara e profissional
+       - Baseie todas as conclusões nos dados fornecidos
+       - Priorize insights acionáveis sobre observações genéricas
+       - Mantenha foco no tópico principal especificado
+    
+    ## Ferramentas Disponíveis:
+    Utilize a ExemploTool quando necessário para organizar e estruturar informações complexas.
+
+  expected_output: >
+    Relatório final estruturado contendo:
+    
+    - **resumo_executivo** (string): Visão geral concisa do relatório em 2-3 parágrafos
+    - **analise_detalhada** (string): Análise aprofundada dos dados com explicações detalhadas
+    - **insights_principais** (list): Lista de 3-5 insights mais relevantes identificados
+    - **recomendacoes** (list): Lista de recomendações práticas e acionáveis
+    - **conclusao** (string): Síntese final que consolida os pontos-chave do relatório
+    
+    O relatório deve ser profissional, baseado em evidências e focado em fornecer 
+    valor acionável para tomada de decisão.

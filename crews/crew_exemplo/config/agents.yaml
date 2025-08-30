@@ -1,0 +1,28 @@
+agent_1:
+  role: >
+    A função específica que este agente irá desempenhar dentro da equipe. 
+    Descreva de forma clara e objetiva o papel do agente (ex.: "Pesquisador de Mercado", "Redator Criativo").
+  goal: >
+    O objetivo principal que este agente deve alcançar. 
+    Sempre formule de maneira orientada a resultados (ex.: "Analisar tendências emergentes de IA para negócios", 
+    "Criar artigos claros e envolventes para um público leigo").
+  backstory: >
+    A história, motivações e experiência prévia do agente. 
+    Use uma narrativa curta, mas rica em contexto, para dar personalidade ao agente 
+    (ex.: "Com anos de experiência em análise de mercado, você combina dados quantitativos com insights qualitativos
+    para identificar oportunidades de crescimento inovadoras.").
+
+agent_2:
+  role: >
+    A função específica que este agente irá desempenhar dentro da equipe. 
+    Pense em complementariedade em relação ao primeiro agente (ex.: "Especialista em Estratégia", "Editor de Conteúdo").
+  goal: >
+    O objetivo central deste agente. 
+    Deve estar alinhado ao objetivo geral do projeto, mas com foco em sua especialidade 
+    (ex.: "Transformar descobertas em recomendações estratégicas acionáveis", 
+    "Editar e refinar textos para torná-los claros, persuasivos e acessíveis").
+  backstory: >
+    A narrativa que explica por que este agente é adequado para o papel. 
+    Dê personalidade, mostrando experiência, habilidades e estilo de trabalho 
+    (ex.: "Você é um comunicador nato, apaixonado por traduzir conceitos técnicos complexos 
+    em histórias que qualquer pessoa pode entender e se engajar.").

@@ -1,0 +1,72 @@
+task_1:
+  description: >
+    Descreva de forma clara e detalhada a tarefa que o agente deve executar.  
+    Utilize técnicas de *prompt engineering* para orientar a resposta, deixando explícito o **contexto**, 
+    os **critérios de qualidade** e a **abordagem esperada**.  
+    Sempre que possível, inclua informações externas relevantes coletadas antes da execução da crew, 
+    utilizando placeholders no formato `{info_externa_1}`.  
+
+    Quando houver múltiplas informações externas, mantenha-as bem organizadas e claramente separadas 
+    para não confundir o agente.  
+    Exemplo de estrutura recomendada:  
+
+    ============================================================================================
+    Informação externa 2:
+    {info_externa_2}
+    ============================================================================================
+    Informação externa 3:
+    {info_externa_3}
+    ============================================================================================
+
+    ➡️ Recomenda-se instruir o agente a **explicar seu raciocínio**, 
+    estruturar a resposta de forma coerente e destacar os pontos-chave.  
+
+  expected_output: >
+    Descreva claramente o que se espera como resultado final.  
+    A descrição deve ser **semântica** (focada no conteúdo), e não apenas em um formato fixo como JSON, 
+    mesmo que o resultado final seja expresso nesse formato.  
+
+    Exemplo de saída esperada:  
+    Um JSON contendo as seguintes chaves e tipos de dados:
+    - chave_1: string → Breve explicação sobre o conteúdo esperado e seu propósito.  
+    - chave_2: int → Breve explicação sobre o conteúdo esperado e seu propósito.  
+    - chave_3: float → Breve explicação sobre o conteúdo esperado e seu propósito.  
+    - chave_4: list → Breve explicação sobre o conteúdo esperado e seu propósito.  
+    - chave_5: dict → Breve explicação sobre o conteúdo esperado e seu propósito.  
+
+    🔎 Importante: deixe claro **o propósito do output** (ex.: "resumir informações para posterior análise", 
+    "estruturar dados de mercado para alimentar outro agente", etc.).
+
+task_2:
+  description: >
+    Escreva a descrição da tarefa de forma orientada a ação, detalhando **o que deve ser feito**, 
+    **como deve ser feito** e **quais restrições ou critérios devem ser observados**.  
+    Use placeholders de informações externas (ex.: `{info_externa_1}`) para enriquecer o contexto.  
+
+    Em casos de inputs extensos, separe-os visualmente para manter a clareza:  
+
+    ============================================================================================
+    Informação externa 2:
+    {info_externa_2}
+    ============================================================================================
+    Informação externa 3:
+    {info_externa_3}
+    ============================================================================================
+
+    ➡️ Sempre deixe explícito o formato esperado do raciocínio (ex.: "compare prós e contras", 
+    "estruture em tópicos claros", "destaque insights mais relevantes").  
+
+  expected_output: >
+    Detalhe o resultado esperado da tarefa de forma **semântica e descritiva**, 
+    evitando restringir a saída apenas a um formato rígido.  
+
+    Exemplo de saída esperada:  
+    Estrutura em JSON contendo as seguintes chaves:  
+    - chave_1: string → Descrição clara do que deve conter e sua utilidade.  
+    - chave_2: int → Explicação breve sobre a métrica ou valor esperado.  
+    - chave_3: float → Explicação sobre a relevância deste valor numérico.  
+    - chave_4: list → Lista de elementos esperados, com exemplos se possível.  
+    - chave_5: dict → Estrutura de dados aninhada, com explicação do que cada subcampo deve conter.  
+
+    ✅ O resultado final deve ser útil para **alimentar a próxima etapa da crew** 
+    ou para **gerar insights acionáveis**.
