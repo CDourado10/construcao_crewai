@@ -153,9 +153,8 @@ guia_construcao/
 
 O projeto inclui integração com ferramentas de observabilidade:
 
-- **Langtrace**: Monitoramento de chamadas LLM
-- **OpenTelemetry**: Tracing distribuído
-- **Logs estruturados**: Acompanhamento detalhado da execução
+- **OpenLit**: Monitoramento de chamadas LLM e métricas de performance
+- **Logs estruturados**: Acompanhamento detalhado da execução dos flows
 
 ## 🤝 Contribuição
 

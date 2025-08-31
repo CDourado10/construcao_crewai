@@ -11,7 +11,6 @@ from crewai.project import CrewBase, agent, crew, task
 from crewai.knowledge.source.crew_docling_source import CrewDoclingSource
 from dotenv import load_dotenv
 from pydantic import BaseModel
-from langtrace_python_sdk import langtrace
 import openlit
 import sys
 import os
@@ -27,7 +26,6 @@ from tools.tool_examplo import ExemploTool
 load_dotenv()
 
 # Configuração de observabilidade (monitoramento da execução da crew)
-langtrace.init(api_key=os.getenv("LANGTRACE_API_KEY"))
 openlit.init(disable_metrics=True)
 
 # Fonte de conhecimento adicional utilizada pelos agentes

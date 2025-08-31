@@ -34,10 +34,8 @@ from tools.tool_examplo import ExemploTool
 load_dotenv()
 
 # Configuração de observabilidade (monitoramento da execução da crew)
-from langtrace_python_sdk import langtrace
 import openlit
 
-langtrace.init(api_key=os.getenv("LANGTRACE_API_KEY"))
 openlit.init(disable_metrics=True)
 
 # Fonte de conhecimento adicional utilizada pelos agentes
