@@ -550,30 +550,6 @@ class FlowExemplo(Flow):
 # ------------------------------------------------------
 # Estas funções facilitam a execução e teste do flow
 
-async def executar_flow_async(topico: str, **kwargs) -> Dict[str, Any]:
-    """
-    Função auxiliar assíncrona para executar o flow com parâmetros específicos.
-    
-    Esta função facilita a execução do flow a partir de outros módulos
-    ou scripts, encapsulando a criação e execução do flow.
-    
-    Args:
-        topico: O tópico principal a ser processado pelo flow.
-        **kwargs: Parâmetros adicionais para o flow.
-        
-    Returns:
-        Resultado da execução do flow.
-    """
-    # Instancia o flow
-    flow = FlowExemplo()
-    
-    # Prepara os parâmetros de entrada como state
-    state = {"topico": topico}
-    state.update(kwargs)  # Adiciona parâmetros opcionais
-    
-    # Executa o flow e retorna o resultado
-    return await flow.kickoff(state)
-
 def executar_flow(topico: str, **kwargs) -> Dict[str, Any]:
     """
     Função síncrona para executar o flow.
