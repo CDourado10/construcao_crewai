@@ -1,0 +1,102 @@
+analise_complexa:
+  description: >
+    Realize uma análise técnica aprofundada dos dados complexos fornecidos, 
+    identificando padrões, métricas críticas e fatores de risco.
+    
+    ## Dados Complexos para Análise:
+    {dados_complexos}
+    
+    ## Contexto Adicional:
+    {contexto_adicional}
+    
+    ## Parâmetros Técnicos:
+    {parametros_tecnicos}
+    
+    ## Instruções de Análise:
+    
+    1. **Categorização**: Identifique a categoria principal dos dados e classifique o nível de complexidade (1-10)
+    
+    2. **Identificação de Fatores Críticos**: Analise os dados para identificar:
+       - Elementos que representam maior risco ou oportunidade
+       - Dependências e interdependências entre componentes
+       - Pontos de falha potenciais ou gargalos
+    
+    3. **Métricas Relevantes**: Extraia e calcule métricas quantitativas importantes:
+       - Indicadores de performance
+       - Métricas de qualidade
+       - Valores de referência (benchmarks)
+    
+    4. **Recomendações Técnicas**: Baseado na análise, forneça:
+       - Recomendações de otimização técnica
+       - Sugestões de mitigação de riscos
+       - Propostas de melhorias incrementais
+    
+    ## Critérios de Qualidade:
+    - Base todas as conclusões nos dados fornecidos
+    - Use abordagem quantitativa sempre que possível
+    - Identifique incertezas e limitações da análise
+    - Priorize insights acionáveis sobre observações genéricas
+
+  expected_output: >
+    Análise técnica estruturada contendo:
+    
+    - **categoria_principal** (string): Categoria dominante identificada nos dados
+    - **nivel_complexidade** (int): Nível de complexidade de 1-10 com justificativa
+    - **fatores_criticos** (list): Lista de 3-7 fatores críticos identificados
+    - **metricas_relevantes** (dict): Dicionário com métricas quantitativas extraídas
+    - **recomendacoes_tecnicas** (list): Lista de 3-5 recomendações técnicas específicas
+    
+    A análise deve ser rigorosa, baseada em evidências e focada em aspectos técnicos acionáveis.
+
+sintese_integrada:
+  description: >
+    Integre a análise técnica complexa com contextos adicionais para gerar uma síntese 
+    consolidada que identifique convergências, divergências e oportunidades.
+    
+    ## Análise Técnica Recebida:
+    Você receberá o resultado da análise complexa realizada pelo especialista técnico.
+    Use essas informações como base para sua síntese integrada.
+    
+    ## Contexto Adicional:
+    {contexto_adicional}
+    
+    ## Parâmetros Técnicos:
+    {parametros_tecnicos}
+    
+    ## Instruções de Síntese:
+    
+    1. **Resumo Integrado**: Crie um resumo que combine:
+       - Principais descobertas da análise técnica
+       - Contexto adicional fornecido
+       - Implicações estratégicas identificadas
+    
+    2. **Análise de Convergência**: Identifique pontos onde:
+       - Diferentes fontes de informação se alinham
+       - Padrões consistentes emergem
+       - Conclusões se reforçam mutuamente
+    
+    3. **Análise de Divergência**: Identifique áreas onde:
+       - Informações conflitantes aparecem
+       - Incertezas precisam ser resolvidas
+       - Investigações adicionais são necessárias
+    
+    4. **Conclusões Consolidadas**: Organize as conclusões em categorias:
+       - Conclusões de alta confiança
+       - Hipóteses que requerem validação
+       - Áreas de incerteza identificadas
+    
+    5. **Próximos Passos**: Defina ações concretas baseadas na síntese:
+       - Prioridades imediatas
+       - Investigações de médio prazo
+       - Monitoramento contínuo necessário
+
+  expected_output: >
+    Síntese integrada estruturada contendo:
+    
+    - **resumo_integrado** (string): Resumo consolidado de 3-4 parágrafos
+    - **pontos_convergencia** (list): Lista de 3-5 pontos onde informações convergem
+    - **areas_divergencia** (list): Lista de 2-4 áreas com informações conflitantes
+    - **conclusoes_consolidadas** (dict): Dicionário organizando conclusões por nível de confiança
+    - **proximos_passos** (list): Lista de 4-6 ações recomendadas com priorização
+    
+    A síntese deve ser holística, identificando tanto consensos quanto lacunas de informação.

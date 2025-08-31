@@ -24,12 +24,13 @@ Este exemplo demonstra a integração completa entre todos os componentes do pro
 # Bibliotecas padrão do Python
 import os
 import sys
+import random
 from typing import Dict, Any
 
 # Bibliotecas de terceiros
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
-from crewai.flow.flow import Flow, listen, start
+from crewai.flow.flow import Flow, listen, start, or_, and_, router
 
 # Configuração de caminhos para imports relativos
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -37,6 +38,7 @@ sys.path.append(project_root)
 
 # Imports locais do projeto
 from crews.crew_exemplo.crew_exemplo_crew import metodo_de_execucao_da_crew
+from crews.crew_exemplo_2.crew_exemplo_2_crew import metodo_de_execucao_da_crew_2
 from crews.crew_relatorio.crew_relatorio_crew import executar_crew_relatorio
 
 # Carrega variáveis de ambiente
@@ -57,30 +59,25 @@ class FlowExemploState(BaseModel):
     4. Incluir todos os dados que precisam ser compartilhados entre etapas
     """
     # Dados de entrada do flow
-    topico: str = Field(
-        description="Tópico principal a ser processado pelo flow"
-    )
+    topico: str = Field(description="Tópico principal para pesquisa e análise")
+    info_externa_1: str = Field(description="Informação externa adicional para contexto")
+    info_externa_2: str = Field(default="", description="Segunda informação externa para contexto")
+    info_externa_3: str = Field(default="", description="Terceira informação externa para contexto")
     
-    # Informações externas para a crew
-    info_externa_1: str = Field(
-        default="", 
-        description="Primeira informação contextual para a crew"
-    )
-    info_externa_2: str = Field(
-        default="", 
-        description="Segunda informação contextual para a crew"
-    )
-    info_externa_3: str = Field(
-        default="", 
-        description="Terceira informação contextual para a crew"
-    )
+    # Resultados das crews
+    resultado_crew_exemplo: dict = Field(default={}, description="Resultado da execução da crew exemplo")
+    resultado_crew_exemplo_2: dict = Field(default={}, description="Resultado da execução da crew exemplo 2")
+    relatorio_final: str = Field(default="", description="Relatório final gerado pela crew de relatório")
     
-    # Resultados intermediários e finais
-    resultado_crew: dict = Field(
-        default_factory=dict, 
-        description="Resultado estruturado retornado pela crew_exemplo"
-    )
-    relatorio_final: str = Field(default="", description="Relatório final gerado com base nos resultados da crew")
+    # Controle de fluxo condicional
+    processamento_complexo: bool = Field(default=False, description="Flag para determinar se deve usar processamento complexo")
+    validacao_aprovada: bool = Field(default=False, description="Flag para indicar se a validação foi aprovada")
+    tipo_processamento: str = Field(default="", description="Tipo de processamento escolhido pelo router")
+    
+    # Logs de controle de fluxo
+    logs_or: list = Field(default_factory=list, description="Logs dos métodos executados via OR")
+    logs_and: list = Field(default_factory=list, description="Logs dos métodos executados via AND")
+    logs_router: list = Field(default_factory=list, description="Logs das decisões do router")
 
 # [BLOCO 3] - IMPLEMENTAÇÃO DO FLOW
 # ------------------------------------------------------
@@ -209,42 +206,85 @@ class FlowExemplo(Flow):
             )
             
             # Atualiza o estado com os resultados da crew
-            flow_state.resultado_crew = resultado_crew
+            flow_state.resultado_crew_exemplo = resultado_crew
             
-            print("✅ [FLOW EXEMPLO] Crew executada com sucesso")
+            print("✅ [FLOW EXEMPLO] Crew exemplo executada com sucesso")
             
         except Exception as e:
             # [DICA 7] - TRATAMENTO DE ERROS
             # Sempre trate possíveis erros para evitar que o flow inteiro falhe
-            print(f"❌ [FLOW EXEMPLO] Erro ao executar crew: {str(e)}")
+            print(f"❌ [FLOW EXEMPLO] Erro ao executar crew exemplo: {str(e)}")
             # Em caso de erro, podemos fornecer um resultado padrão ou alternativo
-            flow_state.resultado_crew = {"erro": str(e), "resultado_alternativo": "Dados de fallback"}
+            flow_state.resultado_crew_exemplo = {"erro": str(e), "resultado_alternativo": "Dados de fallback"}
         
         return flow_state.model_dump()
     
     @listen("executar_crew_exemplo")
-    async def gerar_relatorio_final(self, state: Dict[str, Any]) -> Dict[str, Any]:
+    async def executar_crew_exemplo_2(self, state: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Gera um relatório final usando a crew_relatorio especializada.
+        Executa a crew_exemplo_2 com análise complexa dos dados.
         
-        Esta etapa demonstra como integrar crews especializadas dentro de um flow,
-        seguindo a estrutura padrão do projeto com agentes e tarefas configurados via YAML.
+        Esta etapa demonstra como executar múltiplas crews em sequência,
+        permitindo processamento mais complexo e especializado dos dados.
         
         Args:
-            state: Estado atual do flow com os resultados da crew.
+            state: Estado atual do flow com os resultados da crew_exemplo.
             
         Returns:
-            Estado atualizado com o relatório final.
+            Estado atualizado com os resultados da crew_exemplo_2.
         """
         flow_state = FlowExemploState(**state)
         
-        print(f"📝 [FLOW EXEMPLO] Gerando relatório final para: '{flow_state.topico}'")
+        print(f"🔬 [FLOW EXEMPLO] Executando crew_exemplo_2 para análise complexa: '{flow_state.topico}'")
+        
+        try:
+            # Executa a crew_exemplo_2 com dados complexos baseados nos resultados anteriores
+            resultado_crew_2 = metodo_de_execucao_da_crew_2(
+                dados_complexos=str(flow_state.resultado_crew_exemplo),
+                contexto_adicional=flow_state.info_externa_1,
+                parametros_tecnicos=f"Análise técnica de: {flow_state.topico}"
+            )
+            
+            # Atualiza o estado com os resultados da segunda crew
+            flow_state.resultado_crew_exemplo_2 = resultado_crew_2
+            
+            print("✅ [FLOW EXEMPLO] Crew exemplo 2 executada com sucesso")
+            
+        except Exception as e:
+            print(f"❌ [FLOW EXEMPLO] Erro ao executar crew exemplo 2: {str(e)}")
+            flow_state.resultado_crew_exemplo_2 = {"erro": str(e), "resultado_alternativo": "Análise complexa indisponível"}
+        
+        return flow_state.model_dump()
+    
+    @listen("executar_crew_exemplo_2")
+    async def gerar_relatorio_final(self, state: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Gera um relatório final consolidando os resultados de múltiplas crews.
+        
+        Esta etapa demonstra como integrar crews especializadas dentro de um flow,
+        consolidando resultados de múltiplas execuções em um relatório final.
+        
+        Args:
+            state: Estado atual do flow com os resultados de ambas as crews.
+            
+        Returns:
+            Estado atualizado com o relatório final consolidado.
+        """
+        flow_state = FlowExemploState(**state)
+        
+        print(f"📝 [FLOW EXEMPLO] Gerando relatório final consolidado para: '{flow_state.topico}'")
         
         try:
             # [DICA 8] - INTEGRAÇÃO COM CREW ESPECIALIZADA
-            # Use crews especializadas para tarefas específicas, mantendo a estrutura padrão
+            # Consolida os resultados de múltiplas crews para o relatório final
+            dados_consolidados = {
+                "crew_exemplo": flow_state.resultado_crew_exemplo,
+                "crew_exemplo_2": flow_state.resultado_crew_exemplo_2,
+                "topico": flow_state.topico
+            }
+            
             resultado_relatorio = executar_crew_relatorio(
-                dados_entrada=str(flow_state.resultado_crew),
+                dados_entrada=str(dados_consolidados),
                 topico=flow_state.topico
             )
             
@@ -262,7 +302,189 @@ class FlowExemplo(Flow):
         
         return flow_state.model_dump()
     
+    # [BLOCO 3.5] - OPERADORES LÓGICOS AVANÇADOS
+    # ------------------------------------------------------
+    # Demonstração dos operadores OR, AND e ROUTER do CrewAI
+    
     @listen("gerar_relatorio_final")
+    async def avaliar_complexidade(self, state: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Avalia se o processamento deve ser complexo baseado no conteúdo.
+        
+        Esta etapa demonstra como usar lógica condicional para determinar
+        o fluxo de execução baseado nos resultados anteriores.
+        
+        Args:
+            state: Estado atual do flow com o relatório gerado.
+            
+        Returns:
+            Estado atualizado com flags de controle de fluxo.
+        """
+        flow_state = FlowExemploState(**state)
+        
+        print("🔍 [FLOW EXEMPLO] Avaliando complexidade do processamento...")
+        
+        # [DICA 13] - LÓGICA CONDICIONAL BASEADA EM CONTEÚDO
+        # Analisa o conteúdo para determinar se precisa de processamento complexo
+        relatorio_length = len(flow_state.relatorio_final)
+        crew_1_length = len(str(flow_state.resultado_crew_exemplo))
+        crew_2_length = len(str(flow_state.resultado_crew_exemplo_2))
+        
+        # Determina complexidade baseada no tamanho do conteúdo
+        total_content = relatorio_length + crew_1_length + crew_2_length
+        flow_state.processamento_complexo = total_content > 1000  # Threshold arbitrário
+        
+        # Simula uma validação aleatória para demonstrar o router
+        flow_state.validacao_aprovada = random.choice([True, False])
+        
+        print(f"📊 Conteúdo total: {total_content} caracteres")
+        print(f"🔧 Processamento complexo: {flow_state.processamento_complexo}")
+        print(f"✅ Validação aprovada: {flow_state.validacao_aprovada}")
+        
+        return flow_state.model_dump()
+    
+    @router("avaliar_complexidade")
+    async def decidir_tipo_processamento(self, state: Dict[str, Any]) -> str:
+        """
+        Router que decide o tipo de processamento baseado na avaliação.
+        
+        O decorator @router permite criar fluxos condicionais dinâmicos,
+        direcionando a execução para diferentes caminhos baseado na lógica de negócio.
+        
+        Args:
+            state: Estado atual do flow.
+            
+        Returns:
+            String indicando o caminho a seguir.
+        """
+        flow_state = FlowExemploState(**state)
+        
+        print("🎯 [ROUTER] Decidindo tipo de processamento...")
+        
+        # [DICA 14] - LÓGICA DO ROUTER
+        # O router permite criar múltiplos caminhos de execução
+        if flow_state.processamento_complexo and flow_state.validacao_aprovada:
+            flow_state.tipo_processamento = "complexo_aprovado"
+            flow_state.logs_router.append("Escolhido: processamento complexo aprovado")
+            print("📈 Direcionando para processamento complexo aprovado")
+            return "complexo_aprovado"
+        elif flow_state.processamento_complexo and not flow_state.validacao_aprovada:
+            flow_state.tipo_processamento = "complexo_rejeitado"
+            flow_state.logs_router.append("Escolhido: processamento complexo rejeitado")
+            print("📉 Direcionando para processamento complexo rejeitado")
+            return "complexo_rejeitado"
+        elif not flow_state.processamento_complexo and flow_state.validacao_aprovada:
+            flow_state.tipo_processamento = "simples_aprovado"
+            flow_state.logs_router.append("Escolhido: processamento simples aprovado")
+            print("✨ Direcionando para processamento simples aprovado")
+            return "simples_aprovado"
+        else:
+            flow_state.tipo_processamento = "simples_rejeitado"
+            flow_state.logs_router.append("Escolhido: processamento simples rejeitado")
+            print("⚡ Direcionando para processamento simples rejeitado")
+            return "simples_rejeitado"
+    
+    # [DEMONSTRAÇÃO DO OPERADOR OR]
+    # O operador or_ executa quando QUALQUER um dos métodos especificados emite saída
+    
+    @listen("complexo_aprovado")
+    async def processamento_avancado(self, state: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Processamento avançado para casos complexos aprovados.
+        """
+        flow_state = FlowExemploState(**state)
+        
+        print("🚀 [PROCESSAMENTO AVANÇADO] Executando análise detalhada...")
+        flow_state.logs_or.append("Processamento avançado executado")
+        
+        # Simula processamento avançado
+        import time
+        time.sleep(0.5)  # Simula processamento
+        
+        return flow_state.model_dump()
+    
+    @listen("simples_aprovado")
+    async def processamento_rapido(self, state: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Processamento rápido para casos simples aprovados.
+        """
+        flow_state = FlowExemploState(**state)
+        
+        print("⚡ [PROCESSAMENTO RÁPIDO] Executando análise básica...")
+        flow_state.logs_or.append("Processamento rápido executado")
+        
+        return flow_state.model_dump()
+    
+    @listen(or_("processamento_avancado", "processamento_rapido"))
+    async def logger_processamento_aprovado(self, state: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Logger que executa quando QUALQUER processamento aprovado é concluído.
+        
+        O operador or_ permite que este método seja executado quando
+        processamento_avancado OU processamento_rapido emitir uma saída.
+        
+        Args:
+            state: Estado atual do flow.
+            
+        Returns:
+            Estado atualizado com logs.
+        """
+        flow_state = FlowExemploState(**state)
+        
+        print("📝 [LOGGER OR] Processamento aprovado concluído!")
+        flow_state.logs_or.append("Logger OR: processamento aprovado registrado")
+        
+        return flow_state.model_dump()
+    
+    # [DEMONSTRAÇÃO DO OPERADOR AND]
+    # O operador and_ executa apenas quando TODOS os métodos especificados emitiram saída
+    
+    @listen("complexo_rejeitado")
+    async def analise_rejeicao_complexa(self, state: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Análise específica para rejeições em casos complexos.
+        """
+        flow_state = FlowExemploState(**state)
+        
+        print("🔍 [ANÁLISE REJEIÇÃO] Analisando motivos da rejeição complexa...")
+        flow_state.logs_and.append("Análise de rejeição complexa executada")
+        
+        return flow_state.model_dump()
+    
+    @listen("simples_rejeitado")
+    async def analise_rejeicao_simples(self, state: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Análise específica para rejeições em casos simples.
+        """
+        flow_state = FlowExemploState(**state)
+        
+        print("📋 [ANÁLISE REJEIÇÃO] Analisando motivos da rejeição simples...")
+        flow_state.logs_and.append("Análise de rejeição simples executada")
+        
+        return flow_state.model_dump()
+    
+    @listen(and_("analise_rejeicao_complexa", "analise_rejeicao_simples"))
+    async def consolidar_analises_rejeicao(self, state: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Consolida análises apenas quando AMBAS as análises de rejeição foram executadas.
+        
+        O operador and_ garante que este método só execute quando
+        analise_rejeicao_complexa E analise_rejeicao_simples tiverem emitido saída.
+        
+        Args:
+            state: Estado atual do flow.
+            
+        Returns:
+            Estado atualizado com consolidação.
+        """
+        flow_state = FlowExemploState(**state)
+        
+        print("📊 [CONSOLIDADOR AND] Consolidando todas as análises de rejeição...")
+        flow_state.logs_and.append("Consolidação AND: todas as análises de rejeição processadas")
+        
+        return flow_state.model_dump()
+    
+    @listen(or_("logger_processamento_aprovado", "consolidar_analises_rejeicao"))
     async def finalizar_flow(self, state: Dict[str, Any]) -> Dict[str, Any]:
         """
         Finaliza o flow e prepara a saída final.
@@ -291,8 +513,33 @@ class FlowExemplo(Flow):
         print("\n" + "="*50)
         print(f"RESUMO DO FLOW: '{flow_state.topico}'")
         print("="*50)
-        print(f"Informações processadas: {len(flow_state.resultado_crew)}")
-        print(f"Tamanho do relatório: {len(flow_state.relatorio_final)} caracteres")
+        print(f"Crew exemplo processada: {len(str(flow_state.resultado_crew_exemplo))} caracteres")
+        print(f"Crew exemplo 2 processada: {len(str(flow_state.resultado_crew_exemplo_2))} caracteres")
+        print(f"Tamanho do relatório: {len(str(flow_state.relatorio_final))} caracteres")
+        print(f"Tipo de processamento: {flow_state.tipo_processamento}")
+        print(f"Processamento complexo: {flow_state.processamento_complexo}")
+        print(f"Validação aprovada: {flow_state.validacao_aprovada}")
+        print(f"Logs OR executados: {len(flow_state.logs_or)}")
+        print(f"Logs AND executados: {len(flow_state.logs_and)}")
+        print(f"Decisões do Router: {len(flow_state.logs_router)}")
+        print("="*50)
+        
+        # [DICA 15] - LOGS DETALHADOS DOS OPERADORES
+        if flow_state.logs_or:
+            print("\n🔀 LOGS DO OPERADOR OR:")
+            for i, log in enumerate(flow_state.logs_or, 1):
+                print(f"  {i}. {log}")
+        
+        if flow_state.logs_and:
+            print("\n🔗 LOGS DO OPERADOR AND:")
+            for i, log in enumerate(flow_state.logs_and, 1):
+                print(f"  {i}. {log}")
+        
+        if flow_state.logs_router:
+            print("\n🎯 LOGS DO ROUTER:")
+            for i, log in enumerate(flow_state.logs_router, 1):
+                print(f"  {i}. {log}")
+        
         print("="*50)
         
         # [DICA 12] - RETORNO FINAL
@@ -349,6 +596,35 @@ def executar_flow(topico: str, **kwargs) -> Dict[str, Any]:
     # O CrewAI gerencia internamente o event loop
     return flow.kickoff(state)
 
+def plot():
+    """
+    Gera uma visualização HTML interativa do flow usando o método plot() do CrewAI.
+    
+    Esta função cria uma representação gráfica do workflow que mostra:
+    - Nós representando cada método/etapa do flow
+    - Setas direcionadas indicando o fluxo de execução
+    - Conexões entre métodos baseadas nos decoradores @listen, @router, or_, and_
+    - Estrutura visual dos operadores lógicos avançados implementados
+    
+    O arquivo HTML gerado é interativo, permitindo:
+    - Zoom in/out para explorar detalhes
+    - Hover sobre nós para ver informações adicionais
+    - Navegação visual do fluxo de dados entre etapas
+    
+    Saída:
+        Cria o arquivo "FlowExemploPlot.html" no diretório atual que pode ser
+        aberto em qualquer navegador web para visualizar o flow completo.
+        
+    Uso:
+        Esta visualização é especialmente útil para:
+        - Entender a estrutura complexa dos operadores lógicos (or_, and_, @router)
+        - Debugar fluxos condicionais
+        - Documentar workflows para apresentações
+        - Identificar gargalos ou caminhos de execução
+    """
+    flow = FlowExemplo()
+    flow.plot("FlowExemploPlot")
+
 # Ponto de entrada para execução direta do script
 if __name__ == "__main__":
     # [DICA 14] - EXECUÇÃO STANDALONE
@@ -369,6 +645,7 @@ if __name__ == "__main__":
             info_externa_1=INFO_ADICIONAL
         )
         print("✅ Flow executado com sucesso!")
+        plot()
     except Exception as e:
         print(f"❌ Erro ao executar o flow: {str(e)}")
         import traceback
