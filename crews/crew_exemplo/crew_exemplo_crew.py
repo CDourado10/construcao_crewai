@@ -27,6 +27,7 @@ import datetime
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 sys.path.append(project_root)
 
+
 # Importa tools personalizadas que serão utilizadas pelos agentes ou tasks
 from tools.tool_examplo import ExemploTool
 
